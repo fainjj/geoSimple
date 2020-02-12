@@ -8,7 +8,6 @@
 #' @param correction_method Correction method passed directly to landsat::topocorr. See ?landsat::topocorr for full list of options.
 #'
 #' @return Returns nothing. Topo corrected bands will be placed in the same folder as the original bands with the _topo_corr suffix. Currently only supports tif output.
-#' @export
 #'
 gs.topocorr <- function(dem_path, bands_folder, sun_elev, sun_azim, raster_extension='tif', correction_method='ccorrection'){
   if (!require(landsat)) { install.packages('landsat') }; require(landsat)

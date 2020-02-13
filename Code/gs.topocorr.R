@@ -29,6 +29,6 @@ gs.topocorr <- function(dem_path, bands_folder, sun_elev, sun_azim, raster_exten
         raster() %>%
         writeRaster(filename = x %>%
                       str_remove(pattern = paste0('\\.', raster_extension)) %>%
-                      paste0('_topo_corr.tif'))
+                      paste0('_topocorr.tif'))
     })
 }

@@ -1,4 +1,3 @@
-
 #' Simple Topographic Correction
 #'
 #' @param dem_path Path to your DEM file

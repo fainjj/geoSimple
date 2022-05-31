@@ -7,7 +7,7 @@
 #' @param raster_extension File extension for image bands. Defaults to 'tif'
 #' @param correction_method Correction method passed directly to landsat::topocorr. See ?landsat::topocorr for full list of options.
 #'
-#' @return Returns nothing. Topo corrected bands will be placed in the same folder as the original bands with the _topo_corr suffix. Currently only supports tif output.
+#' @return Returns nothing. Topo corrected bands will be placed in the same folder as the original bands with the _topocorr suffix. Currently only supports tif output.
 #' @export
 #'
 #' @examples
@@ -15,11 +15,15 @@ gs.topocorr <- function(dem_path, bands_folder, sun_elev, sun_azim, raster_exten
   if (!require(landsat)) { install.packages('landsat') }; require(landsat)
   if (!require(raster)) { install.packages('raster') }; require(raster)
   if (!require(tidyverse)) { install.packages('tidyverse') }; require(tidyverse)
-
+  
   urdem <- raster(dem_path)
   urslp <- terrain(urdem, opt='slope') %>% as('SpatialGridDataFrame')
   urasp <- terrain(urdem, opt='aspect') %>% as('SpatialGridDataFrame')
-
+  
+  # if(crs(raster(list.files(bands_folder)[[1]])) != crs(raster(dem_path))) {
+  #   projectRaster(urdem, crs = crs(raster(list.files(bands_folder)[[1]])))
+  # }
+  
   list.files(bands_folder, pattern=paste0('.', raster_extension, '$'), full.names = T) %>%
     walk(function(x) {
       readGDAL(x) %>%
@@ -28,6 +32,9 @@ gs.topocorr <- function(dem_path, bands_folder, sun_elev, sun_azim, raster_exten
         raster() %>%
         writeRaster(filename = x %>%
                       str_remove(pattern = paste0('\\.', raster_extension)) %>%
-                      paste0('_topocorr.tif'))
+                      paste0('_', correction_method, '_topocorr.tif'),
+                    overwrite=TRUE)
     })
 }
+
+
